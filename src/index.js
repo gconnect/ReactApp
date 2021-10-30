@@ -1,17 +1,40 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
+import JSON from './db.json'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+//COMPONENTS
+import Header from './components/header'
+import NewsList from './components/news_list'
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+class App extends Component {
+    state = {
+        news: JSON,
+        filtered: []
+    }
+
+    getKeyword = (event) =>{
+        let keyword = event.target.value
+        let filtered = this.state.news.filter((item) =>{
+            return item.title.indexOf(keyword) > -1
+        })
+
+        this.setState({
+            filtered
+        })
+
+        console.log(filtered)
+    }
+
+    render(){
+        return (
+            <div>
+                <Header keyword = {this.getKeyword}/>
+                <NewsList news ={this.state.filtered.length === 0 ? this.state.news : this.state.filtered}>
+                <h3> The news are</h3>
+                </NewsList>
+            </div>
+        )
+    }
+} 
+
+ReactDOM.render(<App/>, document.querySelector('#root'))
